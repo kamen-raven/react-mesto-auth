@@ -1,20 +1,28 @@
-import React from 'react';
-import Header from './Header.js';
-import Main from './Main.js';
-import Footer from './Footer.js';
+//импорт реакт-компоненты
+import React, { useState } from 'react';
+import { Route, Switch } from 'react-router-dom';
+//импорт вспомогательных компонентов
 import api from "../utils/api.js";
 import { CurrentUserContext } from '../contexts/CurrentUserContext.js';
+import ProtectedRoute from "./ProtectedRoute.js";
+//импорт компоненты страниц
+import Main from './Main.js';
+import Login from "./Login";
+import Register from "./Register";
+//импорт попапов
 import PopupWithForm from './PopupWithForm.js';
 import EditProfilePopup from "./EditProfilePopup.js";
 import EditAvatarPopup from "./EditAvatarPopup.js";
 import AddPlacePopup from "./AddPlacePopup.js";
 import ImagePopup from './ImagePopup.js';
 
-
 export default function App() {
+  //стейт состояния входа
+  const [loggedIn, isLoggedIn] = useState(false);
+
+
   //стейт-переменная данных пользоваетля
   const [currentUser, setCurretUser] = React.useState({});
-
 
   //---------стейт открытия попапов
   //попап изменения профиля
@@ -147,17 +155,25 @@ export default function App() {
   return (
   <CurrentUserContext.Provider value={currentUser}>
     <div className="page">
-      <Header />
-        <Main
-          cards={cards}
-          onCardClick={handleCardClick}
-          onCardLike={handleCardLike}
-          onCardDelete={handleCardDelete}
-          onEditProfile={handleEditProfileClick}
-          onEditAvatar={handleEditAvatarClick}
-          onAddPlace={handleAddPlaceClick}
-        />
-      <Footer />
+    <Switch>
+      <ProtectedRoute exact path="/"
+                      component={Main}
+                      loggedIn={loggedIn}
+                      cards={cards}
+                      onCardClick={handleCardClick}
+                      onCardLike={handleCardLike}
+                      onCardDelete={handleCardDelete}
+                      onEditProfile={handleEditProfileClick}
+                      onEditAvatar={handleEditAvatarClick}
+                      onAddPlace={handleAddPlaceClick} >
+      </ProtectedRoute>
+      <Route path="/sing-in">
+        <Login />
+      </Route>
+      <Route path="/sing-up">
+        <Register />
+      </Route>
+    </Switch>
 
     {/* popupProfileEdit */}
     <EditProfilePopup
@@ -194,8 +210,7 @@ export default function App() {
       buttonText="Да"
       onClose={closeAllPopups}
     />
-
-    </div>
+</div>
   </CurrentUserContext.Provider>
   )
 }
