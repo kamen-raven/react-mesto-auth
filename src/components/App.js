@@ -15,6 +15,7 @@ import EditProfilePopup from "./EditProfilePopup.js";
 import EditAvatarPopup from "./EditAvatarPopup.js";
 import AddPlacePopup from "./AddPlacePopup.js";
 import ImagePopup from './ImagePopup.js';
+import InfoTooltip from "./InfoTooltip.js";
 
 export default function App() {
   //стейт состояния входа
@@ -210,6 +211,11 @@ export default function App() {
       buttonText="Да"
       onClose={closeAllPopups}
     />
+
+    {/* InfoTooltip succes */}
+    <InfoTooltip />
+    {/* InfoTooltip fail */}
+
 </div>
   </CurrentUserContext.Provider>
   )
