@@ -6,21 +6,17 @@ export default function Login(props) {
   return (
     <div className="page">
       <Header />
-      <div className="">
-        <button className="popup__close-button"
-          type="button"
-          onClick={props.onClose}>
-        </button>
-        <div className="popup__content">
+      <section className="">
+        <div className="">
           <h2 className="">
             Регистрация
           </h2>
-          <form className={`popup__form`}
+          <form className=""
             name=""
             noValidate
             onSubmit="{}">
-            <fieldset className="popup__fieldset">
-              <input className="popup__input popup__input_card-add_name"
+            <fieldset className="">
+              <input className=""
                 id="input-card-name"
                 type="email"
                 name="email"
@@ -31,10 +27,10 @@ export default function Login(props) {
                 required
                 value=""
                 onChange="{}"/>
-              <span className="popup__input-error"
+              <span className=""
                 id="input-card-name-error">
               </span>
-              <input className="popup__input popup__input_card-add_link"
+              <input className=""
                 id="input-card-url"
                 type="url"
                 name="link"
@@ -43,18 +39,18 @@ export default function Login(props) {
                 required
                 value=""
                 onChange="{}" />
-              <span className="popup__input-error"
+              <span className=""
                 id="input-card-url-error">
               </span>
             </fieldset>
-            <button className="popup__save-button"
+            <button className=""
               type="submit"
               onClick="{}">
               Зарегистрироваться
             </button>
           </form>
         </div>
-      </div>
+      </section>
 
       <Footer />
     </div>

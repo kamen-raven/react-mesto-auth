@@ -18,7 +18,7 @@ import ImagePopup from './ImagePopup.js';
 
 export default function App() {
   //стейт состояния входа
-  const [loggedIn, isLoggedIn] = useState(false);
+  const [loggedIn, isLoggedIn] = useState(true);
 
 
   //стейт-переменная данных пользоваетля
