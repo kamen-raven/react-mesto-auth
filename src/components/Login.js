@@ -1,58 +1,55 @@
 import React from 'react';
 import Header from './Header.js';
-import Footer from './Footer.js';
 
 export default function Login(props) {
   return (
     <div className="page">
       <Header />
-      <section className="">
-        <div className="">
-          <h2 className="">
-            Регистрация
+      <section className="auth-page">
+        <div className="auth-page__container">
+          <h2 className="auth-page__title">
+            Вход
           </h2>
-          <form className=""
-            name=""
-            noValidate
-            onSubmit="{}">
-            <fieldset className="">
-              <input className=""
-                id="input-card-name"
-                type="email"
-                name="email"
-                placeholder="Email"
-                minLength="2"
-                maxLength="30"
-                autoComplete="off"
-                required
-                value=""
-                onChange="{}"/>
-              <span className=""
-                id="input-card-name-error">
+          <form className="auth-page__form"
+                name=""
+                noValidate
+                onSubmit="{}">
+            <fieldset className="auth-page__fieldset">
+              <input className="auth-page__input auth-page__input_login_email"
+                      id="input-login-email"
+                      type="email"
+                      name="email"
+                      placeholder="Email"
+                      autoComplete="off"
+                      required
+                      value=""
+                      onChange="{}"/>
+              <span className="auth-page__input-error"
+                    id="input-login-email-error">
               </span>
-              <input className=""
-                id="input-card-url"
-                type="url"
-                name="link"
-                placeholder="Пароль"
-                autoComplete="off"
-                required
-                value=""
-                onChange="{}" />
-              <span className=""
-                id="input-card-url-error">
+              <input className="auth-page__input auth-page__input_login_password"
+                      id="input-login-pass"
+                      type="password"
+                      name="password"
+                      placeholder="Пароль"
+                      minLength="3"
+                      maxLength="18"
+                      autoComplete="off"
+                      required
+                      value=""
+                      onChange="{}" />
+              <span className="auth-page__input-error"
+                    id="input-login-pass-error">
               </span>
             </fieldset>
-            <button className=""
-              type="submit"
-              onClick="{}">
-              Зарегистрироваться
+            <button className="auth-page__sumbit-button"
+                    type="submit"
+                    onClick="{}">
+              Войти
             </button>
           </form>
         </div>
       </section>
-
-      <Footer />
     </div>
   )
 }

@@ -167,7 +167,7 @@ export default function App() {
                       onEditAvatar={handleEditAvatarClick}
                       onAddPlace={handleAddPlaceClick} >
       </ProtectedRoute>
-      <Route path="/sing-in">
+      <Route exact path="/sing-in">
         <Login />
       </Route>
       <Route path="/sing-up">

@@ -1,7 +1,7 @@
-/* div, main, section, img, button, a, p, h1, h2 {
+div, main, section, img, button, a, p, h1, h2, fieldset, input {
   outline: solid red 1px;
 }
- */
+
 .page {
   width: 100%;
   margin: 0 auto;

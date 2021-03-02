@@ -52,6 +52,18 @@
 @import url(./blocks/footer/footer.css);
 @import url(./blocks/footer/__copyright/footer__copyright.css);
 
+/*auth-page*/
+@import url(./blocks/auth-page/auth-page.css);
+@import url(./blocks/auth-page/__container/auth-page__container.css);
+@import url(./blocks/auth-page/__title/auth-page__title.css);
+@import url(./blocks/auth-page/__form/auth-page__form.css);
+@import url(./blocks/auth-page/__fieldset/auth-page__fieldset.css);
+@import url(./blocks/auth-page/__input/auth-page__input.css);
+@import url(./blocks/auth-page/__sumbit-button/auth-page__sumbit-button.css);
+@import url(./blocks/auth-page/__caption-text/auth-page__caption-text.css);
+@import url(./blocks/auth-page/__link-text/auth-page__link-text.css);
+@import url(./blocks/auth-page/__link/auth-page__link.css);
+
 /*popup*/
 @import url(./blocks/popup/popup.css);
 @import url(./blocks/popup/_opened/popup_opened.css);
