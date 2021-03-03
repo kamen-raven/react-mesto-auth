@@ -1,10 +1,17 @@
 import React from 'react';
-import Header from './Header.js';
+
 
 export default function Login(props) {
+  //стейт почты пользователя
+
+  //стейт пароля
+
+
+
+
+
   return (
     <div className="page">
-      <Header />
       <section className="auth-page">
         <div className="auth-page__container">
           <h2 className="auth-page__title">

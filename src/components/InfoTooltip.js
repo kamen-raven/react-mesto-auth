@@ -12,9 +12,10 @@ export default function InfoTooltip(props) {
         </button>
         <div className="popup__content">
           <img className="popup__info-tooltip-icon"
-                src={iconSucces} />
+                src={props.isSucces ? iconSucces : iconFail} />
           <h2 className="popup__title popup__title_info-tooltip">
-          Вы успешно зарегистрировались!
+          {props.isSucces ? `Вы успешно зарегистрировались!` : `Что-то пошло не так!
+Попробуйте ещё раз.`}
           </h2>
         </div>
       </div>

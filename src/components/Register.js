@@ -1,30 +1,52 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import Header from './Header.js';
 
-export default function Register(props) {
+export default function Register({ onRegister }) {
+  //начальные значения данных инпутов
+  const initialData = {
+    email: '',
+    password: ''
+  };
+  //стейт данных пользователя
+  const [data, setData] = useState(initialData);
+
+  //обработчик инпута
+  function handleInputChange(event) {
+    const { name, value } = event.target;
+    setData(data => ({
+      ...data,
+      [name]: value
+    }));
+  }
+
+  //обработчик отправки формы
+  function handleSubmit(event) {
+    event.preventDefault();
+    if (!data.email || !data.password) {
+    }
+    onRegister(data)
+  }
+
   return (
     <div className="page">
-      <Header />
       <section className="auth-page">
         <div className="auth-page__container">
           <h2 className="auth-page__title">
             Регистрация
           </h2>
           <form className="auth-page__form"
-                name=""
+                name="form-singup"
                 noValidate
-                onSubmit="{}">
+                onSubmit={handleSubmit}>
             <fieldset className="auth-page__fieldset">
               <input className="auth-page__input auth-page__input_singup_email"
                       id="input-singup-email"
                       type="email"
                       name="email"
                       placeholder="Email"
-                      autoComplete="off"
                       required
-                      value=""
-                      onChange="{}"/>
+                      value={data.email}
+                      onChange={handleInputChange}/>
               <span className="auth-page__input-error"
                     id="input-singup-email-error">
               </span>
@@ -34,18 +56,16 @@ export default function Register(props) {
                       name="password"
                       placeholder="Пароль"
                       minLength="3"
-                      maxLength="18"
-                      autoComplete="off"
+                      maxLength="20"
                       required
-                      value=""
-                      onChange="{}" />
+                      value={data.password}
+                      onChange={handleInputChange} />
               <span className="auth-page__input-error"
                     id="input-singup-pass-error">
               </span>
             </fieldset>
             <button className="auth-page__sumbit-button"
-                    type="submit"
-                    onClick="{}">
+                    type="submit">
               Зарегистрироваться
             </button>
           </form>
@@ -54,7 +74,7 @@ export default function Register(props) {
               Уже зарегистрированы?
             </p>
             <Link className="auth-page__link"
-                  to="/sing-in">
+                  to="sing-in">
               Войти
             </Link>
           </div>

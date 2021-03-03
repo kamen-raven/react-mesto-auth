@@ -1,14 +1,18 @@
 //импорт реакт-компоненты
-import React, { useState } from 'react';
-import { Route, Switch } from 'react-router-dom';
+import React, { useState, useEffect} from 'react';
+import { Redirect, Route, Switch, useHistory } from 'react-router-dom';
 //импорт вспомогательных компонентов
 import api from "../utils/api.js";
+import * as auth from "../utils/auth.js";
 import { CurrentUserContext } from '../contexts/CurrentUserContext.js';
 import ProtectedRoute from "./ProtectedRoute.js";
 //импорт компоненты страниц
+import Header from './Header.js';
 import Main from './Main.js';
-import Login from "./Login";
-import Register from "./Register";
+import Footer from './Footer.js';
+import Login from "./Login.js";
+import Register from "./Register.js";
+
 //импорт попапов
 import PopupWithForm from './PopupWithForm.js';
 import EditProfilePopup from "./EditProfilePopup.js";
@@ -18,35 +22,79 @@ import ImagePopup from './ImagePopup.js';
 import InfoTooltip from "./InfoTooltip.js";
 
 export default function App() {
-  //стейт состояния входа
+  //-----------------РЕГИСТРАЦИЯ И АВТОРИЗАЦИЯ НА САЙТЕ
+  //начальные значения данных
+  const initialData = {
+    email: '',
+    password: ''
+  }
+  //стейт состояния авторизации на сайте
   const [loggedIn, isLoggedIn] = useState(false);
+  //стейт данных пользователя при авторизации
+  const [data, setData] = useState(initialData);
+  //стейт состояния попапа результата регистрации
+  const [isInfoTooltipIsOpen, setIsInfoTooltipIsOpen] = useState(false);
+  const [isRegistrationSucces, setIsRegistrationSucces] = useState(false);
+  const history = useHistory();
+
+  //обработчик регистрации
+  function handleRegister({ email, password }) {
+    return auth.register(email, password)
+    .then((res) => {
+      setIsRegistrationSucces(true); //успешное
+      setIsInfoTooltipIsOpen(true);
+      history.push('/sing-in');
+      return res;
+    }) //перенаправление на страницу входа
+    .catch((error) => {
+      setIsInfoTooltipIsOpen(true);
+      console.log(`Хьюстон, у нас проблема при регистрации пользователя: ${error} - некорректно заполнено одно из полей `);
+    })
+  }
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  //----------------РАБОТА С ГЛАВНОЙ СТРАНИЦЕЙ
   //стейт-переменная данных пользоваетля
-  const [currentUser, setCurretUser] = React.useState({});
+  const [currentUser, setCurretUser] = useState({});
 
   //---------стейт открытия попапов
   //попап изменения профиля
-  const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = React.useState(false);
+  const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
   function handleEditProfileClick() {
     setIsEditProfilePopupOpen(true);
   }
 
   //попап изменения аватара
-  const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = React.useState(false);
+  const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
   function handleEditAvatarClick() {
     setIsEditAvatarPopupOpen(true);
   }
 
   //попап добавления карточки
-  const [isAddPlacePopupOpen, setIsAddCardPopupOpen] = React.useState(false);
+  const [isAddPlacePopupOpen, setIsAddCardPopupOpen] = useState(false);
   function handleAddPlaceClick() {
     setIsAddCardPopupOpen(true);
   }
 
   // стейт открытия изображения карточки
-  const [selectedCard, setSelectedCard] = React.useState({});
-  const [isPopupWithImageOpen, setIsPopupWithImageOpen] = React.useState(false);
+  const [selectedCard, setSelectedCard] = useState({});
+  const [isPopupWithImageOpen, setIsPopupWithImageOpen] = useState(false);
 
   function handleCardClick(card) {
     setIsPopupWithImageOpen(true);
@@ -59,6 +107,7 @@ export default function App() {
     setIsAddCardPopupOpen(false);
     setIsEditAvatarPopupOpen(false);
     setIsPopupWithImageOpen(false);
+    setIsInfoTooltipIsOpen(false);
   }
 
   //изменение данных пользователя
@@ -87,9 +136,9 @@ export default function App() {
 
   //------------CARDS------------//
   //стейт карточек
-  const [cards, setCards] = React.useState([]);
+  const [cards, setCards] = useState([]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     Promise.all([
       api.getUserData(),
       api.getInitialCards()
@@ -156,25 +205,36 @@ export default function App() {
   return (
   <CurrentUserContext.Provider value={currentUser}>
     <div className="page">
-    <Switch>
-      <ProtectedRoute exact path="/"
-                      component={Main}
-                      loggedIn={loggedIn}
-                      cards={cards}
-                      onCardClick={handleCardClick}
-                      onCardLike={handleCardLike}
-                      onCardDelete={handleCardDelete}
-                      onEditProfile={handleEditProfileClick}
-                      onEditAvatar={handleEditAvatarClick}
-                      onAddPlace={handleAddPlaceClick} >
-      </ProtectedRoute>
-      <Route path="/sing-in">
-        <Login />
-      </Route>
-      <Route path="/sing-up">
-        <Register />
-      </Route>
-    </Switch>
+      <Header />
+        <Switch>
+          <ProtectedRoute exact path="/"
+                          component={Main}
+                          loggedIn={loggedIn}
+                          cards={cards}
+                          onCardClick={handleCardClick}
+                          onCardLike={handleCardLike}
+                          onCardDelete={handleCardDelete}
+                          onEditProfile={handleEditProfileClick}
+                          onEditAvatar={handleEditAvatarClick}
+                          onAddPlace={handleAddPlaceClick} >
+          </ProtectedRoute>
+          <Route path="/sing-in">
+            <Login />
+          </Route>
+          <Route path="/sing-up">
+            <Register onRegister={handleRegister} />
+          </Route>
+          <Route path="*">
+            {loggedIn ? <Redirect to="/" /> : <Redirect to="/sing-in" />}
+          </Route>
+        </Switch>
+      <Footer />
+
+    {/* InfoTooltip*/}
+    <InfoTooltip
+      isOpen={isInfoTooltipIsOpen}
+      onClose={closeAllPopups}
+      isSucces={isRegistrationSucces}/>
 
     {/* popupProfileEdit */}
     <EditProfilePopup
@@ -212,11 +272,7 @@ export default function App() {
       onClose={closeAllPopups}
     />
 
-    {/* InfoTooltip succes */}
-    <InfoTooltip />
-    {/* InfoTooltip fail */}
-
-</div>
+    </div>
   </CurrentUserContext.Provider>
   )
 }

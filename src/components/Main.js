@@ -1,7 +1,6 @@
 import React from 'react';
-import Header from './Header.js';
 import Card from "./Card.js";
-import Footer from './Footer.js';
+
 import { CurrentUserContext } from '../contexts/CurrentUserContext.js';
 
 export default function Main(props) {
@@ -9,8 +8,6 @@ export default function Main(props) {
   const currentUser = React.useContext(CurrentUserContext);
 
   return (
-    <>
-      <Header />
       <main className="content">
         <section className="profile">
           <button className="profile__avatar-button"
@@ -48,7 +45,5 @@ export default function Main(props) {
           )}
         </section>
       </main>
-      <Footer />
-    </>
   )
 }
