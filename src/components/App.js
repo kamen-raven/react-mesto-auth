@@ -43,9 +43,9 @@ export default function App() {
     .then((res) => {
       setIsRegistrationSucces(true); //успешное
       setIsInfoTooltipIsOpen(true);
-      history.push('/sing-in');
+      history.push('/sing-in'); //перенаправление на страницу входа
       return res;
-    }) //перенаправление на страницу входа
+    })
     .catch((error) => {
       setIsInfoTooltipIsOpen(true);
       console.log(`Хьюстон, у нас проблема при регистрации пользователя: ${error} - некорректно заполнено одно из полей `);

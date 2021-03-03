@@ -44,6 +44,7 @@ export default function Register({ onRegister }) {
                       type="email"
                       name="email"
                       placeholder="Email"
+                      autoComplete="off"
                       required
                       value={data.email}
                       onChange={handleInputChange}/>
@@ -57,6 +58,7 @@ export default function Register({ onRegister }) {
                       placeholder="Пароль"
                       minLength="3"
                       maxLength="20"
+                      autoComplete="off"
                       required
                       value={data.password}
                       onChange={handleInputChange} />

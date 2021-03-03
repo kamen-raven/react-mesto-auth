@@ -1,12 +1,31 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 
-export default function Login(props) {
-  //стейт почты пользователя
+export default function Login({ onLogin }) {
+  //начальные значения данных инпутов
+  const initialData = {
+    email: '',
+    password: ''
+  };
+  //стейт данных пользователя
+  const [data, setData] = useState(initialData);
 
-  //стейт пароля
+  //обработчик инпута
+  function handleInputChange(event) {
+    const { name, value } = event.target;
+    setData(data => ({
+      ...data,
+      [name]: value
+    }));
+  }
 
-
+  //обработчик отправки формы
+  function handleSubmit(event) {
+    event.preventDefault();
+    if (!data.email || !data.password) {
+    }
+    onLogin(data)
+  }
 
 
 
@@ -20,17 +39,16 @@ export default function Login(props) {
           <form className="auth-page__form"
                 name=""
                 noValidate
-                onSubmit="{}">
+                onSubmit={handleSubmit}>
             <fieldset className="auth-page__fieldset">
               <input className="auth-page__input auth-page__input_login_email"
                       id="input-login-email"
                       type="email"
                       name="email"
                       placeholder="Email"
-                      autoComplete="off"
                       required
-                      value=""
-                      onChange="{}"/>
+                      value={data.email}
+                      onChange={handleInputChange}/>
               <span className="auth-page__input-error"
                     id="input-login-email-error">
               </span>
@@ -40,18 +58,16 @@ export default function Login(props) {
                       name="password"
                       placeholder="Пароль"
                       minLength="3"
-                      maxLength="18"
-                      autoComplete="off"
+                      maxLength="20"
                       required
-                      value=""
-                      onChange="{}" />
+                      value={data.password}
+                      onChange={handleInputChange} />
               <span className="auth-page__input-error"
                     id="input-login-pass-error">
               </span>
             </fieldset>
             <button className="auth-page__sumbit-button"
-                    type="submit"
-                    onClick="{}">
+                    type="submit">
               Войти
             </button>
           </form>
