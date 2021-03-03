@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, Link } from 'react-router-dom';
+import { Switch, Route, Link } from 'react-router-dom';
 import logo from '../images/logo.svg';
 
 export default function Header() {
@@ -9,9 +9,10 @@ export default function Header() {
         alt="лого Mesto"
         src={logo}
       />
-      <ul class="header__list">
+      <ul className="header__list">
+        <Switch>
           <Route exact path="/sing-up">
-            <li class="header__links">
+            <li className="header__links">
               <Link className="header__link "
                     to="/">
                   Войти
@@ -19,7 +20,7 @@ export default function Header() {
             </li>
           </Route>
           <Route exact path="/sing-in">
-            <li class="header__links">
+            <li className="header__links">
               <Link className="header__link "
                     to="/sign-up">
                   Регистрация
@@ -27,16 +28,17 @@ export default function Header() {
             </li>
           </Route>
           <Route exact path="/">
-            <li class="header__links header__link_type_email">
+            <li className="header__links header__link_type_email">
                 sample@email.com
             </li>
-            <li class="header__links">
+            <li className="header__links">
               <Link className="header__link header__link_type_exit"
                     to="/sign-in">
                   Выйти
               </Link>
             </li>
           </Route>
+        </Switch>
       </ul>
     </header>
   )

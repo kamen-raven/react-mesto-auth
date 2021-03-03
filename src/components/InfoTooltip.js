@@ -4,7 +4,7 @@ import iconSucces from "../images/registration-succes.svg";
 
 export default function InfoTooltip(props) {
   return (
-    <div className={`popup popup_opened ${props.isOpen ? 'popup_opened' : ''}`}>
+    <div className={`popup ${props.isOpen ? 'popup_opened' : ''}`}>
       <div className="popup__container popup__container_create_info-tooltip">
         <button className="popup__close-button"
                 type="button"

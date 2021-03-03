@@ -55,7 +55,7 @@ export default function EditProfilePopup(props) {
                 maxLength="40"
                 autoComplete="off"
                 required
-                value={name}
+                value={name || ""}
                 onChange={handleInputName} />
         <span className="popup__input-error"
               id="input--profile-name-error">
@@ -69,7 +69,7 @@ export default function EditProfilePopup(props) {
               maxLength="200"
               autoComplete="off"
               required
-              value={description}
+              value={description || ""}
               onChange={handleInputAbout} />
         <span className="popup__input-error"
               id="input-profile-about-error">

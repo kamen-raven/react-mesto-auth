@@ -19,7 +19,7 @@ import InfoTooltip from "./InfoTooltip.js";
 
 export default function App() {
   //стейт состояния входа
-  const [loggedIn, isLoggedIn] = useState(true);
+  const [loggedIn, isLoggedIn] = useState(false);
 
 
   //стейт-переменная данных пользоваетля
@@ -168,7 +168,7 @@ export default function App() {
                       onEditAvatar={handleEditAvatarClick}
                       onAddPlace={handleAddPlaceClick} >
       </ProtectedRoute>
-      <Route exact path="/sing-in">
+      <Route path="/sing-in">
         <Login />
       </Route>
       <Route path="/sing-up">
