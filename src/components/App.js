@@ -1,5 +1,5 @@
 //импорт реакт-компоненты
-import React, { useState, useEffect} from 'react';
+import React, { useState, useEffect, useCallback} from 'react';
 import { Redirect, Route, Switch, useHistory } from 'react-router-dom';
 //импорт вспомогательных компонентов
 import api from "../utils/api.js";
@@ -14,24 +14,19 @@ import Login from "./Login.js";
 import Register from "./Register.js";
 
 //импорт попапов
-import PopupWithForm from './PopupWithForm.js';
+import PopupWithForm from "./PopupWithForm.js";
 import EditProfilePopup from "./EditProfilePopup.js";
 import EditAvatarPopup from "./EditAvatarPopup.js";
 import AddPlacePopup from "./AddPlacePopup.js";
-import ImagePopup from './ImagePopup.js';
+import ImagePopup from "./ImagePopup.js";
 import InfoTooltip from "./InfoTooltip.js";
 
 export default function App() {
   //-----------------РЕГИСТРАЦИЯ И АВТОРИЗАЦИЯ НА САЙТЕ
-  //начальные значения данных
-  const initialData = {
-    email: '',
-    password: ''
-  }
   //стейт состояния авторизации на сайте
-  const [loggedIn, isLoggedIn] = useState(false);
-  //стейт данных пользователя при авторизации
-  const [data, setData] = useState(initialData);
+  const [loggedIn, setLoggedIn] = useState(false);
+  //стейт емэйла пользователя при авторизации
+  const [email, setEmail] = useState('');
   //стейт состояния попапа результата регистрации
   const [isInfoTooltipIsOpen, setIsInfoTooltipIsOpen] = useState(false);
   const [isRegistrationSucces, setIsRegistrationSucces] = useState(false);
@@ -52,11 +47,47 @@ export default function App() {
     })
   }
 
+  //обработчик авторизации
+  function handleLogin({ email, password }) {
+    return auth.login(email, password)
+    .then((res) => {
+      setLoggedIn(true);
+      localStorage.setItem('jwt', res.token); //сохраняем токен в локальное хранилище
+      history.push('/'); //перенаправление на страницу с карточками
+      return res;
+    })
+    .catch((error) => {
+      if (error === 'ошибка 400') {
+        console.log(`Хьюстон, у нас проблема при авторизации пользователя: ${error} - не передано одно из полей`)
+      } else {
+        console.log(`Хьюстон, у нас проблема при авторизации пользователя: ${error} - пользователь с email не найден`)
+      }
+    })
+  }
+
+  //проверяем токен пользователя при повторном входе на сайт
+  const checkToken = useCallback(() => {
+    const jwt = localStorage.getItem('jwt');
+    if (jwt) {
+      auth.checkToken(jwt)
+        .then((res) => {
+          if (res) {
+            setLoggedIn(true);
+            setEmail(res.data.email); //получаем данные емэйла
+            history.push('/');
+          }
+        })
+        .catch((error) => {
+          history.push('/sing-in'); //если токена нет - перенаправляем на Вход
+          console.log(`Хьюстон, у нас проблема при проверке токена пользователя: ${error} - токен не передан или переданный токен некорректен `);
+        })
+    }
+  }, []);
 
 
-
-
-
+    useEffect(() => {
+      checkToken();
+    }, [])
 
 
 
@@ -219,12 +250,12 @@ export default function App() {
                           onAddPlace={handleAddPlaceClick} >
           </ProtectedRoute>
           <Route path="/sing-in">
-            <Login />
+            <Login onLogin={handleLogin} />
           </Route>
           <Route path="/sing-up">
             <Register onRegister={handleRegister} />
           </Route>
-          <Route path="*">
+          <Route>
             {loggedIn ? <Redirect to="/" /> : <Redirect to="/sing-in" />}
           </Route>
         </Switch>

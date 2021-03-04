@@ -22,8 +22,6 @@ export default function Register({ onRegister }) {
   //обработчик отправки формы
   function handleSubmit(event) {
     event.preventDefault();
-    if (!data.email || !data.password) {
-    }
     onRegister(data)
   }
 

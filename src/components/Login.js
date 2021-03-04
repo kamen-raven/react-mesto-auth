@@ -22,8 +22,6 @@ export default function Login({ onLogin }) {
   //обработчик отправки формы
   function handleSubmit(event) {
     event.preventDefault();
-    if (!data.email || !data.password) {
-    }
     onLogin(data)
   }
 
