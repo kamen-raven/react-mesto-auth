@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 
-
 export default function Login({ onLogin }) {
   //начальные значения данных инпутов
   const initialData = {
@@ -25,8 +24,6 @@ export default function Login({ onLogin }) {
     onLogin(data)
   }
 
-
-
   return (
     <div className="page">
       <section className="auth-page">
@@ -46,7 +43,7 @@ export default function Login({ onLogin }) {
                       placeholder="Email"
                       required
                       value={data.email}
-                      onChange={handleInputChange}/>
+                      onChange={handleInputChange} />
               <span className="auth-page__input-error"
                     id="input-login-email-error">
               </span>

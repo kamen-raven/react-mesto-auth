@@ -1,5 +1,5 @@
 //импорт реакт-компоненты
-import React, { useState, useEffect, useCallback} from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Redirect, Route, Switch, useHistory } from 'react-router-dom';
 //импорт вспомогательных компонентов
 import api from "../utils/api.js";
@@ -35,37 +35,39 @@ export default function App() {
   //обработчик регистрации
   function handleRegister({ email, password }) {
     return auth.register(email, password)
-    .then((res) => {
-      setIsRegistrationSucces(true); //успешное
-      setIsInfoTooltipIsOpen(true);
-      history.push('/sing-in'); //перенаправление на страницу входа
-      return res;
-    })
-    .catch((error) => {
-      setIsInfoTooltipIsOpen(true);
-      console.log(`Хьюстон, у нас проблема при регистрации пользователя: ${error} - некорректно заполнено одно из полей `);
-    })
+      .then((res) => {
+        setIsRegistrationSucces(true); //успешное
+        setIsInfoTooltipIsOpen(true);
+        history.push('/sing-in'); //перенаправление на страницу входа
+        return res;
+      })
+      .catch((error) => {
+        setIsInfoTooltipIsOpen(true);
+        setIsRegistrationSucces(false);
+        console.log(`Хьюстон, у нас проблема при регистрации пользователя: ${error} - некорректно заполнено одно из полей `);
+      })
   }
 
   //обработчик авторизации
   function handleLogin({ email, password }) {
     return auth.login(email, password)
-    .then((res) => {
-      setLoggedIn(true);
-      localStorage.setItem('jwt', res.token); //сохраняем токен в локальное хранилище
-      history.push('/'); //перенаправление на страницу с карточками
-      return res;
-    })
-    .catch((error) => {
-      if (error === 'ошибка 400') {
-        console.log(`Хьюстон, у нас проблема при авторизации пользователя: ${error} - не передано одно из полей`)
-      } else {
-        console.log(`Хьюстон, у нас проблема при авторизации пользователя: ${error} - пользователь с email не найден`)
-      }
-    })
+      .then((res) => {
+        setLoggedIn(true);
+        localStorage.setItem('jwt', res.token); //сохраняем токен в локальное хранилище
+        setEmail(email);
+        history.push('/'); //перенаправление на страницу с карточками
+        return res;
+      })
+      .catch((error) => {
+        if (error === 'ошибка 400') {
+          console.log(`Хьюстон, у нас проблема при авторизации пользователя: ${error} - не передано одно из полей`)
+        } else {
+          console.log(`Хьюстон, у нас проблема при авторизации пользователя: ${error} - пользователь с email не найден`)
+        }
+      })
   }
 
-  //проверяем токен пользователя при повторном входе на сайт
+  //проверка токена пользователя при повторном входе на сайт
   const checkToken = useCallback(() => {
     const jwt = localStorage.getItem('jwt');
     if (jwt) {
@@ -82,22 +84,19 @@ export default function App() {
           console.log(`Хьюстон, у нас проблема при проверке токена пользователя: ${error} - токен не передан или переданный токен некорректен `);
         })
     }
-  }, []);
+  }, [history]);
+  //проверяем токен при рендере
+  useEffect(() => {
+    checkToken();
+  }, [checkToken]);
 
-
-    useEffect(() => {
-      checkToken();
-    }, [])
-
-
-
-
-
-
-
-
-
-
+  //выход из профиля
+  function handleSignout() {
+    localStorage.removeItem('jwt'); //удаляем токен из локального хранилища
+    setEmail('');
+    setLoggedIn(false);
+    history.push('/sing-in');
+  }
 
 
   //----------------РАБОТА С ГЛАВНОЙ СТРАНИЦЕЙ
@@ -234,23 +233,23 @@ export default function App() {
   }
 
   return (
-  <CurrentUserContext.Provider value={currentUser}>
-    <div className="page">
-      <Header />
+    <CurrentUserContext.Provider value={currentUser}>
+      <div className="page">
+        <Header onSignout={handleSignout} userEmail={email} />
         <Switch>
           <ProtectedRoute exact path="/"
-                          component={Main}
-                          loggedIn={loggedIn}
-                          cards={cards}
-                          onCardClick={handleCardClick}
-                          onCardLike={handleCardLike}
-                          onCardDelete={handleCardDelete}
-                          onEditProfile={handleEditProfileClick}
-                          onEditAvatar={handleEditAvatarClick}
-                          onAddPlace={handleAddPlaceClick} >
+            component={Main}
+            loggedIn={loggedIn}
+            cards={cards}
+            onCardClick={handleCardClick}
+            onCardLike={handleCardLike}
+            onCardDelete={handleCardDelete}
+            onEditProfile={handleEditProfileClick}
+            onEditAvatar={handleEditAvatarClick}
+            onAddPlace={handleAddPlaceClick} >
           </ProtectedRoute>
           <Route path="/sing-in">
-            <Login onLogin={handleLogin} />
+            <Login onLogin={handleLogin} checkToken={checkToken} />
           </Route>
           <Route path="/sing-up">
             <Register onRegister={handleRegister} />
@@ -259,51 +258,51 @@ export default function App() {
             {loggedIn ? <Redirect to="/" /> : <Redirect to="/sing-in" />}
           </Route>
         </Switch>
-      <Footer />
+        <Footer />
 
-    {/* InfoTooltip*/}
-    <InfoTooltip
-      isOpen={isInfoTooltipIsOpen}
-      onClose={closeAllPopups}
-      isSucces={isRegistrationSucces}/>
+        {/* InfoTooltip*/}
+        <InfoTooltip
+          isOpen={isInfoTooltipIsOpen}
+          onClose={closeAllPopups}
+          isSucces={isRegistrationSucces} />
 
-    {/* popupProfileEdit */}
-    <EditProfilePopup
-      isOpen={isEditProfilePopupOpen}
-      onClose={closeAllPopups}
-      onUpdateUser={handleUpdateUser}
-    />
+        {/* popupProfileEdit */}
+        <EditProfilePopup
+          isOpen={isEditProfilePopupOpen}
+          onClose={closeAllPopups}
+          onUpdateUser={handleUpdateUser}
+        />
 
-    {/* popupAvatarEdit */}
-    <EditAvatarPopup
-      isOpen={isEditAvatarPopupOpen}
-      onClose={closeAllPopups}
-      onUpdateAvatar={handleUpdateAvatar}
-    />
+        {/* popupAvatarEdit */}
+        <EditAvatarPopup
+          isOpen={isEditAvatarPopupOpen}
+          onClose={closeAllPopups}
+          onUpdateAvatar={handleUpdateAvatar}
+        />
 
-    {/* popupCardAdd */}
-    <AddPlacePopup
-      isOpen={isAddPlacePopupOpen}
-      onClose={closeAllPopups}
-      onAddPlace={handleAddPlaceSubmit}
-    />
+        {/* popupCardAdd */}
+        <AddPlacePopup
+          isOpen={isAddPlacePopupOpen}
+          onClose={closeAllPopups}
+          onAddPlace={handleAddPlaceSubmit}
+        />
 
-    {/* popupImageView*/}
-    <ImagePopup
-      card={selectedCard}
-      isOpen={isPopupWithImageOpen}
-      onClose={closeAllPopups}
-    />
+        {/* popupImageView*/}
+        <ImagePopup
+          card={selectedCard}
+          isOpen={isPopupWithImageOpen}
+          onClose={closeAllPopups}
+        />
 
-    {/* popupConfirmDelete */}
-    <PopupWithForm
-      name="confirm-delete"
-      title="Вы уверены?"
-      buttonText="Да"
-      onClose={closeAllPopups}
-    />
+        {/* popupConfirmDelete */}
+        <PopupWithForm
+          name="confirm-delete"
+          title="Вы уверены?"
+          buttonText="Да"
+          onClose={closeAllPopups}
+        />
 
-    </div>
-  </CurrentUserContext.Provider>
+      </div>
+    </CurrentUserContext.Provider>
   )
 }
